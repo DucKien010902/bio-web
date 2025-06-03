@@ -1,36 +1,34 @@
 const mongoose = require('mongoose');
 
-const UsersDB = new mongoose.Schema(
-  {
-    phone: {
-      type: String,
-      required: true,
-      unique: true,
-      trim: true,
-    },
-    name: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    password: {
-      type: String,
-      required: true,
-      minlength: 6,
-    },
-    birthday: {
-      type: Date,
-      required: true,
-    },
-    address: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-  },
-  {
-    timestamps: true,
-  }
-);
+const Schema = mongoose.Schema;
 
-module.exports = mongoose.model('users', UsersDB);
+const users = new Schema({
+  email: String,
+  role: String,
+  password: String,
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  fullName: String,
+  position: String,
+  phoneNumber: String,
+  address: String,
+  gender: String,
+  departments: String,
+  salary: Number,
+  university: String,
+  comefrom: String,
+  relation: String,
+  company: String,
+  highschool: String,
+  birthday: String,
+  family: String,
+  bio: String,
+  national: String,
+  action: [''],
+  avatarImage: String,
+  coverImage: String,
+});
+
+module.exports = mongoose.model('users', users);

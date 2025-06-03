@@ -1,17 +1,18 @@
 const mongoose = require('mongoose');
 const UserDB = require('../model/usersDB');
+const usersDB = require('../model/usersDB');
 
 class UsersController {
   async createAccount(req, res) {
     try {
-      const { phone, name, password, birthday, address } = req.body;
-      if (!phone || !name || !password || !birthday || !address) {
+      const { phoneNumber, name, password, birthday, address } = req.body;
+      if (!phoneNumber || !name || !password || !birthday || !address) {
         return res
           .status(400)
           .json({ message: 'Vui lòng nhập đầy đủ thông tin.' });
       }
 
-      const existingUser = await UserDB.findOne({ phone });
+      const existingUser = await UserDB.findOne({ phoneNumber });
       if (existingUser) {
         return res
           .status(409)
@@ -21,8 +22,8 @@ class UsersController {
       //   const hashedPassword = await bcrypt.hash(password, 10);
 
       const newUser = new UserDB({
-        phone,
-        name,
+        phoneNumber,
+        fullName,
         password,
         birthday,
         address,
@@ -39,15 +40,15 @@ class UsersController {
 
   async checkAccount(req, res) {
     try {
-      const { phone, password } = req.body;
+      const { phoneNumber, password } = req.body;
 
-      if (!phone || !password) {
+      if (!phoneNumber || !password) {
         return res
           .status(400)
           .json({ message: 'Vui lòng nhập tên và mật khẩu.' });
       }
 
-      const user = await UserDB.findOne({ phone });
+      const user = await UserDB.findOne({ phoneNumber });
 
       if (!user) {
         return res
@@ -65,6 +66,15 @@ class UsersController {
     } catch (error) {
       console.error('Lỗi kiểm tra tài khoản:', error);
       res.status(500).json({ message: 'Đã xảy ra lỗi máy chủ.' });
+    }
+  }
+  async getAccount(req, res) {
+    try {
+      const { phoneNumber } = req.query;
+      const existingUser = await usersDB.findOne({ phoneNumber });
+      return res.status(200).json(existingUser);
+    } catch (error) {
+      return res.status(500).json({ message: 'Loi he thong' });
     }
   }
 }
