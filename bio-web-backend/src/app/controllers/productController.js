@@ -13,8 +13,8 @@ class producController {
   }
   async getCarts(req, res) {
     try {
-      const { email } = req.query;
-      const ownCart = await carts.findOne({ email: email });
+      const { phoneNumber } = req.query;
+      const ownCart = await carts.findOne({ phoneNumber: phoneNumber });
       return res.status(200).json(ownCart?.cart);
     } catch (error) {
       return res.status(500).json({ message: 'Loi server' });
@@ -22,18 +22,18 @@ class producController {
   }
   async addtoCarts(req, res) {
     try {
-      const { email, Id, counts } = req.body;
+      const { phoneNumber, Id, counts } = req.body;
 
-      if (!email || !Id || !counts) {
+      if (!phoneNumber || !Id || !counts) {
         return res.status(400).json({ message: 'Thiếu dữ liệu' });
       }
 
-      let userCart = await carts.findOne({ email });
+      let userCart = await carts.findOne({ phoneNumber });
 
       if (!userCart) {
         // Nếu chưa có giỏ hàng, tạo mới
         userCart = new carts({
-          email,
+          phoneNumber,
           cart: [{ Id, counts }],
         });
       } else {
@@ -59,9 +59,9 @@ class producController {
   }
   async removeFromCart(req, res) {
     try {
-      const { email, Id } = req.body;
+      const { phoneNumber, Id } = req.body;
 
-      if (!email || !Id) {
+      if (!phoneNumber || !Id) {
         return res
           .status(400)
           .json({ message: 'Thiếu email hoặc Id sản phẩm' });

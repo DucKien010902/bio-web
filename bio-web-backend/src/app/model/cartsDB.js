@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const carts = new Schema({
-  email: String,
+  phoneNumber: String,
   cart: [
     {
       Id: String,

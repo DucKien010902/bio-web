@@ -77,6 +77,71 @@ class UsersController {
       return res.status(500).json({ message: 'Loi he thong' });
     }
   }
+  async updateImage(req, res) {
+    try {
+      const { phoneNumber, type, base64 } = req.body;
+      console.log(type, ': ', base64);
+      const existingUser = await usersDB.findOne({ phoneNumber });
+      existingUser[type] = base64;
+      await existingUser.save();
+      return res.status(200).json({ message: 'Cap nhat anh thanh cong' });
+    } catch (error) {
+      return res.status(500).json({ message: 'Loi server' });
+    }
+  }
+  async updateAccount(req, res) {
+    try {
+      console.log(req.body);
+      const {
+        university,
+        address,
+        comefrom,
+        relation,
+        phone,
+        company,
+        highschool,
+        birthday,
+        gender,
+        family,
+        bio,
+        national,
+        action,
+        email,
+      } = req.body;
+      console.log('Toi day roi');
+      const existingUser = await usersDB.findOne({ phoneNumber: phone });
+      if (!existingUser) {
+        console.log('khong ton tai tai khoan');
+      } else {
+        // console.log(existingUser);
+        await usersDB.updateOne(
+          { phoneNumber: phone },
+          {
+            $set: {
+              university,
+              address,
+              comefrom,
+              relation,
+              phoneNumber: phone,
+              company,
+              highschool,
+              birthday,
+              gender,
+              family,
+              bio,
+              national,
+              action,
+            },
+          }
+        );
+        return res
+          .status(200)
+          .json({ message: 'Cập nhật thông tin thành công' });
+      }
+    } catch (error) {
+      return res.status(500).json({ message: 'Loi he thong' });
+    }
+  }
 }
 
 module.exports = new UsersController();
