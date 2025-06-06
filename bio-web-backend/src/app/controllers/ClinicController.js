@@ -40,6 +40,38 @@ class ClinicController {
       return res.status(500).json({ message: 'Lỗi server' });
     }
   }
+  async createClinic(req, res) {
+    try {
+      const newClinicData = req.body;
+
+      // Kiểm tra dữ liệu đầu vào cơ bản
+      if (!newClinicData.ID || !newClinicData.name) {
+        return res
+          .status(400)
+          .json({ message: 'Thiếu thông tin bắt buộc (ID hoặc name)' });
+      }
+
+      // Kiểm tra xem ID đã tồn tại chưa
+      const existingClinic = await Clinic.findOne({ ID: newClinicData.ID });
+      if (existingClinic) {
+        return res
+          .status(409)
+          .json({ message: 'Phòng khám với ID này đã tồn tại' });
+      }
+
+      // Tạo mới clinic
+      const newClinic = new Clinic(newClinicData);
+      await newClinic.save();
+
+      return res.status(201).json({
+        message: 'Thêm phòng khám thành công',
+        data: newClinic,
+      });
+    } catch (error) {
+      console.error('Lỗi khi thêm phòng khám:', error);
+      return res.status(500).json({ message: 'Lỗi server' });
+    }
+  }
 }
 
 module.exports = new ClinicController();
