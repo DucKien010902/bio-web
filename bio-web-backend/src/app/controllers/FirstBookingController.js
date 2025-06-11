@@ -70,19 +70,22 @@ class ClinicController {
   async confirmBooking(req, res) {
     try {
       const { id } = req.params;
-      const { status } = req.body;
+      const { status, sampleCollectorID, sampleCollectorName } = req.body;
 
-      // Chỉ cho phép chuyển giữa "Đã đặt đơn" và "Đã xác nhận"
-      // const allowedStatuses = ['Đã đặt đơn', 'Đã xác nhận'];
-      // if (!allowedStatuses.includes(status)) {
-      //   return res
-      //     .status(400)
-      //     .json({ message: 'Trạng thái không hợp lệ để xác nhận' });
-      // }
+      const updateFields = { status };
+
+      // Nếu có thông tin nhân viên thu mẫu thì thêm vào bản cập nhật
+      if (sampleCollectorID) {
+        updateFields.sampleCollectorID = sampleCollectorID;
+      }
+
+      if (sampleCollectorName) {
+        updateFields.sampleCollectorName = sampleCollectorName;
+      }
 
       const updatedBooking = await Booking.findOneAndUpdate(
         { bookID: id },
-        { status: status },
+        updateFields,
         { new: true }
       );
 
@@ -99,6 +102,7 @@ class ClinicController {
       return res.status(500).json({ message: 'Lỗi cập nhật trạng thái' });
     }
   }
+
   async updateBookingFields(req, res) {
     try {
       const { id } = req.params;

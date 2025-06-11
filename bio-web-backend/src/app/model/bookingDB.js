@@ -30,6 +30,9 @@ const bookingSchema = new mongoose.Schema(
       enum: ['Tại nhà', 'Tại phòng khám'],
       default: 'Tại phòng khám',
     },
+    sampleCollectorID: String,
+    sampleCollectorName: String,
+    collectAt: String,
   },
   {
     timestamps: true,
