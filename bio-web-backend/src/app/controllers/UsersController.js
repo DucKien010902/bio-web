@@ -5,8 +5,9 @@ const usersDB = require('../model/usersDB');
 class UsersController {
   async createAccount(req, res) {
     try {
-      const { phoneNumber, name, password, birthday, address } = req.body;
-      if (!phoneNumber || !name || !password || !birthday || !address) {
+      const { phoneNumber, name, password } = req.body;
+      if (!phoneNumber || !name || !password) {
+        console.log('error');
         return res
           .status(400)
           .json({ message: 'Vui lòng nhập đầy đủ thông tin.' });
@@ -23,10 +24,9 @@ class UsersController {
 
       const newUser = new UserDB({
         phoneNumber,
-        fullName,
+        fullName: name,
         password,
-        birthday,
-        address,
+        role: 'customer',
       });
 
       await newUser.save();
