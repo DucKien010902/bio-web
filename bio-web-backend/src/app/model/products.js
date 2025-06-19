@@ -12,5 +12,11 @@ const products = new Schema({
   pdCountSale: Number,
   pdStar: Number,
   pdDayDelivery: String,
+  pdTypes: [''],
+  pdCategory: String,
+  pdShopID: String,
+  pdShopName: String,
+  pdDetailData: [{}],
+  pdMoreDescriptions: String,
 });
 module.exports = mongoose.model('products', products);

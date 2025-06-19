@@ -8,6 +8,15 @@ const carts = new Schema({
     {
       Id: String,
       counts: Number,
+      pdImage: String,
+      pdName: String,
+      pdDes: String,
+      pdPrice: Number,
+      pdVouncher: Number,
+      pdCountSale: Number,
+      pdType: String,
+      pdStar: Number,
+      pdDayDelivery: String,
     },
   ],
 });

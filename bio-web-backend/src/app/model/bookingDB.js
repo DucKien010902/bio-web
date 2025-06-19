@@ -33,6 +33,7 @@ const bookingSchema = new mongoose.Schema(
     sampleCollectorID: String,
     sampleCollectorName: String,
     collectAt: String,
+    resultLink: String,
   },
   {
     timestamps: true,

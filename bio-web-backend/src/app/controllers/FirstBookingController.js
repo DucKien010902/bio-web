@@ -70,7 +70,8 @@ class ClinicController {
   async confirmBooking(req, res) {
     try {
       const { id } = req.params;
-      const { status, sampleCollectorID, sampleCollectorName } = req.body;
+      const { status, sampleCollectorID, sampleCollectorName, resultLink } =
+        req.body;
 
       const updateFields = { status };
 
@@ -81,6 +82,9 @@ class ClinicController {
 
       if (sampleCollectorName) {
         updateFields.sampleCollectorName = sampleCollectorName;
+      }
+      if (resultLink) {
+        updateFields.resultLink = resultLink;
       }
 
       const updatedBooking = await Booking.findOneAndUpdate(
