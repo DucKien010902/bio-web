@@ -67,7 +67,7 @@ const shopSchema = new Schema({
   productCategories: [
     {
       categoryName: { type: String, required: true },
-      productIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'products' }],
+      productIds: { type: [String], default: [] }, // ✅ Mã sản phẩm
     },
   ],
 });

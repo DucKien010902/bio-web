@@ -1,5 +1,6 @@
 const products = require('../model/products');
 const carts = require('../model/cartsDB');
+const shops = require('../model/shops');
 const vnpayConfig = require('../../config/VNPayConfig');
 const querystring = require('qs');
 class producController {
@@ -39,26 +40,32 @@ class producController {
         return res.status(400).json({ message: 'Thiếu shopID' });
       }
 
-      const allProducts = await products.find({ pdShopID: shopID });
+      const shop = await shops.findOne({ shopID });
+      if (!shop) {
+        return res.status(404).json({ message: 'Không tìm thấy shop' });
+      }
 
       const grouped = {};
 
-      allProducts.forEach((product) => {
-        const category = product.pdCategory || 'Khác';
+      for (const category of shop.productCategories) {
+        const productCodes = Array.isArray(category.productIds)
+          ? category.productIds
+          : [];
 
-        if (!grouped[category]) {
-          grouped[category] = [];
-        }
+        const productsInCategory = await products.find({
+          Id: { $in: productCodes }, // ✅ tìm theo mã sản phẩm
+        });
 
-        grouped[category].push(product);
-      });
+        grouped[category.categoryName] = productsInCategory;
+      }
 
       res.status(200).json(grouped);
     } catch (error) {
       console.error('Lỗi khi lấy sản phẩm theo shop:', error);
-      res.status(500).json({ message: 'Lỗi server khi lấy sản phẩm' });
+      res.status(500).json({ message: 'Lỗi server' });
     }
   }
+
   async getCarts(req, res) {
     try {
       const { phoneNumber } = req.query;
