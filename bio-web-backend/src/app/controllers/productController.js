@@ -86,12 +86,14 @@ class producController {
         pdPrice,
         pdVouncher,
         pdCountSale,
+        pdShopID,
+        pdShopName,
         pdType,
         pdStar,
         pdDayDelivery,
         counts,
       } = req.body;
-      console.log(pdType);
+      console.log(pdShopID, pdShopName);
       if (!phoneNumber || !Id || !counts) {
         return res.status(400).json({ message: 'Thiếu dữ liệu' });
       }
@@ -112,6 +114,8 @@ class producController {
               pdPrice,
               pdVouncher,
               pdCountSale,
+              pdShopID,
+              pdShopName,
               pdType,
               pdStar,
               pdDayDelivery,
@@ -138,6 +142,8 @@ class producController {
             pdPrice,
             pdVouncher,
             pdCountSale,
+            pdShopID,
+            pdShopName,
             pdType,
             pdStar,
             pdDayDelivery,

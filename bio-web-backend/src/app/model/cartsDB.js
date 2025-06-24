@@ -14,6 +14,8 @@ const carts = new Schema({
       pdPrice: Number,
       pdVouncher: Number,
       pdCountSale: Number,
+      pdShopID: String,
+      pdShopName: String,
       pdType: String,
       pdStar: Number,
       pdDayDelivery: String,
