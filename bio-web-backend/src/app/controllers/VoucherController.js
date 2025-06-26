@@ -78,6 +78,14 @@ class VoucherController {
     }
   }
 
+  async getVoucherGen(req, res) {
+    try {
+      const vouchers = await Voucher.find({});
+      return res.json(vouchers);
+    } catch (err) {
+      return res.status(500).json({ message: 'Lỗi server' });
+    }
+  }
   async getVoucherByShopID(req, res) {
     try {
       const { shopID } = req.query;
@@ -96,11 +104,23 @@ class VoucherController {
       return res.status(500).json({ message: 'Lỗi server' });
     }
   }
+  async getVoucherByUserAndID(req, res) {
+    try {
+      const { shopID, phoneNumber } = req.query;
+      const vouchers = await UserVoucher.find({ shopID, phoneNumber });
+      return res.json(vouchers);
+    } catch (err) {
+      return res.status(500).json({ message: 'Lỗi server' });
+    }
+  }
   async deleteVoucherByID(req, res) {
     try {
-      const { voucherID } = req.body;
-      console.log(voucherID);
-      const deleted = await Voucher.findOneAndDelete({ voucherID });
+      const { voucherID, phoneNumber } = req.body;
+      console.log('--' + phoneNumber);
+      const deleted = await UserVoucher.findOneAndDelete({
+        voucherID,
+        phoneNumber,
+      });
 
       if (!deleted) {
         return res.status(404).json({ message: 'Voucher không tồn tại' });
@@ -109,6 +129,24 @@ class VoucherController {
       return res.json({ message: 'Đã xoá voucher' });
     } catch (err) {
       return res.status(500).json({ message: 'Xoá thất bại' });
+    }
+  }
+  async deleteVoucherByUser(req, res) {
+    try {
+      const { voucherID, phoneNumber } = req.body;
+      console.log(voucherID);
+      const deleted = await Voucher.findOneAndDelete({
+        voucherID,
+        phoneNumber,
+      });
+
+      if (!deleted) {
+        return res.status(404).json({ message: 'Voucher không tồn tại' });
+      }
+
+      return res.json({ message: 'Đã sử dụng voucher' });
+    } catch (err) {
+      return res.status(500).json({ message: 'Xoá voucher thất bại' });
     }
   }
 }

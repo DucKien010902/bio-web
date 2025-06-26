@@ -1,9 +1,12 @@
 const express = require('express');
 const route = express.Router();
 const Vouncher = require('../app/controllers/VoucherController');
-route.post('/deleteVoucher', Vouncher.deleteVoucherByID);
+route.post('/deleteVoucherByID', Vouncher.deleteVoucherByID);
+route.post('/deleteVoucherByUser', Vouncher.getVoucherByUser);
 route.post('/addVoucher', Vouncher.createVoucher);
 route.post('/saveUserVoucher', Vouncher.saveUserVoucher);
 route.get('/getVoucherByShopID', Vouncher.getVoucherByShopID);
 route.get('/getVoucherByUser', Vouncher.getVoucherByUser);
+route.get('/getVoucherByUserAndID', Vouncher.getVoucherByUserAndID);
+route.get('/getVoucherGen', Vouncher.getVoucherGen);
 module.exports = route;

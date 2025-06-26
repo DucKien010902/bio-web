@@ -3,15 +3,20 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const app = express();
 const http = require('http');
-const socketIo = require('socket.io');
+const { Server } = require('socket.io');
 const server = http.createServer(app); // tạo server http
-const io = socketIo(server, {
+const io = new Server(server, {
   cors: {
-    origin: '*',
-    methods: ['GET', 'POST'],
+    origin: 'http://localhost:3000',
   },
 });
-
+io.on('connection', (socket) => {
+  console.log('Socket is On');
+  socket.on('send_message', (message) => {
+    console.log(message);
+    io.emit('feed_back', { content: 'Okela' });
+  });
+});
 const db = require('./config/db/index');
 db.connect();
 const cors = require('cors');
@@ -27,4 +32,4 @@ app.use(express.json());
 
 const route = require('./routes/index');
 route(app);
-app.listen(5001, '0.0.0.0');
+server.listen(5001, '0.0.0.0');
