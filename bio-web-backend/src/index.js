@@ -11,9 +11,9 @@ const io = new Server(server, {
   },
 });
 io.on('connection', (socket) => {
-  console.log('Socket is On');
+  // console.log('Socket is On');
   socket.on('send_message', (message) => {
-    console.log(message);
+    console.log(message.content);
     io.emit('feed_back', { content: 'Okela' });
   });
 });

@@ -29,7 +29,7 @@ class VNPayController {
         vnp_OrderInfo: '123456',
         vnp_OrderType: ProductCode.Other,
         vnp_Amount: amount,
-        vnp_ReturnUrl: 'http://genapp.vn/product/result',
+        vnp_ReturnUrl: 'http://localhost:3000/roduct/result',
         vnp_IpAddr: '127.0.0.1',
         vnp_CreateDate: dateFormat(new Date()),
         vnp_ExpireDate: dateFormat(tomorrow),
