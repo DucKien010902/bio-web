@@ -7,7 +7,7 @@ const { Server } = require('socket.io');
 const server = http.createServer(app); // tạo server http
 const io = new Server(server, {
   cors: {
-    origin: 'http://genapp.vn',
+    origin: 'https://genapp.vn',
   },
 });
 io.on('connection', (socket) => {
