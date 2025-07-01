@@ -21,8 +21,6 @@ app.use(
     credentials: true,
   })
 );
-
-// ✅ Socket.IO cấu hình khớp với CORS trên
 const { Server } = require('socket.io');
 const io = new Server(server, {
   cors: {
@@ -32,31 +30,28 @@ const io = new Server(server, {
   },
 });
 
-// Socket.IO handler
 io.on('connection', (socket) => {
-  console.log('Socket connected:', socket.id);
+  // console.log('Socket connected:', socket.id);
 
-  socket.on('send_message', (message) => {
-    console.log(message.content);
-    io.emit('feed_back', { content: 'Okela' });
+  socket.on('sendmessage', (data) => {
+    console.log(data);
+
+    // ✅ Gửi cho các client khác (KH hoặc shop khác)
+    socket.broadcast.emit('backmessage', data);
   });
 });
 
-// Kết nối database
 const db = require('./config/db/index');
 db.connect();
 
-// Middleware
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Routes
 const route = require('./routes/index');
 route(app);
 
-// Start server
 server.listen(5001, '0.0.0.0', () => {
   console.log('Server running on http://localhost:5001');
 });

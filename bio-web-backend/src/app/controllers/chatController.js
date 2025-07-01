@@ -7,37 +7,20 @@ class ChatDB {
   /* -------- GỬI TIN NHẮN -------- */
   async sendMessage(req, res) {
     try {
-      const { senderID, receiverID, content, fromShop } = req.body;
-      // fromShop: boolean chỉ ra sender là shop hay customer
-      if (
-        !senderID ||
-        !receiverID ||
-        !content ||
-        typeof fromShop !== 'boolean'
-      ) {
+      const { sender, receiver, content, fromShop } = req.body;
+      if (!sender || !receiver || !content || typeof fromShop !== 'boolean') {
         return res.status(400).json({ message: 'Thiếu thông tin' });
       }
-
-      /* (Tuỳ ứng dụng) tra cứu thông tin người gửi/người nhận để lấy tên, avatar … */
-      const sender = await Employee.findOne({ userID: senderID });
-      const receiver = await Employee.findOne({ userID: receiverID });
-
-      if (!sender || !receiver) {
-        return res
-          .status(404)
-          .json({ message: 'Người gửi/nhận không tồn tại' });
-      }
-
       /* 1. TÌM ĐOẠN CHAT GIỮA 2 NGƯỜI (không quan trọng ai là shop trước) */
       let chat = await Chat.findOne({
         $or: [
           {
-            'members.customer.userID': senderID,
-            'members.shop.shopID': receiverID,
+            'members.customer.userID': sender.senderID,
+            'members.shop.shopID': receiver.receiverID,
           },
           {
-            'members.customer.userID': receiverID,
-            'members.shop.shopID': senderID,
+            'members.customer.userID': receiver.receiverID,
+            'members.shop.shopID': sender.senderID,
           },
         ],
       });
@@ -48,25 +31,25 @@ class ChatDB {
           members: fromShop
             ? {
                 shop: {
-                  shopID: senderID,
-                  shopName: sender.fullName,
+                  shopID: sender.senderID,
+                  shopName: sender.shopName,
                   avatarUrl: sender.avatarUrl,
                 },
                 customer: {
-                  userID: receiverID,
-                  userName: receiver.fullName,
+                  userID: receiver.receiverID,
+                  userName: receiver.userName,
                   avatarUrl: receiver.avatarUrl,
                 },
               }
             : {
                 shop: {
-                  shopID: receiverID,
-                  shopName: receiver.fullName,
+                  shopID: receiver.receiverID,
+                  shopName: receiver.shopName,
                   avatarUrl: receiver.avatarUrl,
                 },
                 customer: {
-                  userID: senderID,
-                  userName: sender.fullName,
+                  userID: sender.senderID,
+                  userName: sender.userName,
                   avatarUrl: sender.avatarUrl,
                 },
               },
@@ -92,22 +75,41 @@ class ChatDB {
   }
 
   /* -------- LẤY TOÀN BỘ TIN NHẮN GIỮA 2 NGƯỜI -------- */
-  async getMessage(req, res) {
+  async getMessageByUser(req, res) {
     try {
-      const { customerID, shopID } = req.query;
-      if (!customerID || !shopID) {
+      const { customerID } = req.query;
+      if (!customerID) {
         return res.status(400).json({ message: 'Thiếu customerID / shopID' });
       }
 
-      const chat = await Chat.findOne({
+      const chat = await Chat.find({
         'members.customer.userID': customerID,
+      });
+
+      if (!chat) {
+        return res.status(404).json({ message: 'Chưa có đoạn chat' });
+      }
+      return res.status(200).json(chat);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Lỗi hệ thống' });
+    }
+  }
+  async getMessageByShop(req, res) {
+    try {
+      const { shopID } = req.query;
+      if (!shopID) {
+        return res.status(400).json({ message: 'Thiếu customerID / shopID' });
+      }
+
+      const chat = await Chat.find({
         'members.shop.shopID': shopID,
       });
 
       if (!chat) {
         return res.status(404).json({ message: 'Chưa có đoạn chat' });
       }
-      return res.status(200).json(chat.messages);
+      return res.status(200).json(chat);
     } catch (error) {
       console.error(error);
       return res.status(500).json({ message: 'Lỗi hệ thống' });
