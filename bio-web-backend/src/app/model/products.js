@@ -13,6 +13,7 @@ const products = new Schema({
   pdStar: Number,
   pdDayDelivery: String,
   pdTypes: [''],
+  pdClassify: String,
   pdCategory: String,
   pdShopID: String,
   pdShopName: String,

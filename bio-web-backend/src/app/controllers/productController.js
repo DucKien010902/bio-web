@@ -32,6 +32,17 @@ class producController {
       return res.status(500).json(error);
     }
   }
+  async getProductsByCategory(req, res) {
+    try {
+      const { category } = req.query; // nhận mảng productIds từ body
+      // console.log(productIds);
+      console.log(category);
+      const Products = await products.find({ pdCategory: category });
+      return res.status(200).json(Products);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  }
   async fetchProductsByShopGrouped(req, res) {
     try {
       const { shopID } = req.query;
@@ -40,23 +51,21 @@ class producController {
         return res.status(400).json({ message: 'Thiếu shopID' });
       }
 
-      const shop = await shops.findOne({ shopID });
-      if (!shop) {
-        return res.status(404).json({ message: 'Không tìm thấy shop' });
-      }
+      const productsInShop = await products.find({ pdShopID: shopID });
 
       const grouped = {};
 
-      for (const category of shop.productCategories) {
-        const productCodes = Array.isArray(category.productIds)
-          ? category.productIds
-          : [];
+      for (const product of productsInShop) {
+        const category = product.pdCategory || 'Khác';
+        const classify = product.pdClassify || 'Khác';
 
-        const productsInCategory = await products.find({
-          Id: { $in: productCodes }, // ✅ tìm theo mã sản phẩm
-        });
-
-        grouped[category.categoryName] = productsInCategory;
+        if (!grouped[category]) {
+          grouped[category] = {};
+        }
+        if (!grouped[category][classify]) {
+          grouped[category][classify] = [];
+        }
+        grouped[category][classify].push(product);
       }
 
       res.status(200).json(grouped);

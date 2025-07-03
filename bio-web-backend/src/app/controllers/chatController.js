@@ -11,7 +11,8 @@ class ChatDB {
       if (!sender || !receiver || !content || typeof fromShop !== 'boolean') {
         return res.status(400).json({ message: 'Thiếu thông tin' });
       }
-      /* 1. TÌM ĐOẠN CHAT GIỮA 2 NGƯỜI (không quan trọng ai là shop trước) */
+
+      // 1. TÌM ĐOẠN CHAT GIỮA 2 NGƯỜI (không quan trọng ai là shop trước)
       let chat = await Chat.findOne({
         $or: [
           {
@@ -25,7 +26,7 @@ class ChatDB {
         ],
       });
 
-      /* 2. NẾU CHƯA TỒN TẠI ⇒ TẠO MỚI */
+      // 2. NẾU CHƯA CÓ ⇒ TẠO MỚI
       if (!chat) {
         chat = new Chat({
           members: fromShop
@@ -54,9 +55,22 @@ class ChatDB {
                 },
               },
         });
+      } else {
+        // 3. CẬP NHẬT TÊN / AVATAR (NẾU ĐÃ CÓ CHAT)
+        if (fromShop) {
+          chat.members.shop.shopName = sender.shopName;
+          chat.members.shop.avatarUrl = sender.avatarUrl;
+          chat.members.customer.userName = receiver.userName;
+          chat.members.customer.avatarUrl = receiver.avatarUrl;
+        } else {
+          chat.members.customer.userName = sender.userName;
+          chat.members.customer.avatarUrl = sender.avatarUrl;
+          chat.members.shop.shopName = receiver.shopName;
+          chat.members.shop.avatarUrl = receiver.avatarUrl;
+        }
       }
 
-      /* 3. THÊM TIN NHẮN */
+      // 4. THÊM TIN NHẮN MỚI
       chat.messages.push({
         id: uuidv4(),
         fromShop,
@@ -65,9 +79,10 @@ class ChatDB {
       });
 
       await chat.save();
-      return res
-        .status(200)
-        .json({ message: 'Gửi thành công', chatID: chat.chatID });
+      return res.status(200).json({
+        message: 'Gửi thành công',
+        chatID: chat.chatID,
+      });
     } catch (error) {
       console.error(error);
       return res.status(500).json({ message: 'Lỗi hệ thống' });

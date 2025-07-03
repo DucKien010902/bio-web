@@ -4,6 +4,7 @@ const productsController = require('../app/controllers/productController.js');
 const vnpayReturnController = require('../app/controllers/vnpayReturnController.js');
 route.get('/getallproducts', productsController.getallProducts);
 route.get('/getproductbyid', productsController.getProductById);
+route.get('/getproductbycategory', productsController.getProductsByCategory);
 route.get('/getcarts', productsController.getCarts);
 route.get('/fetchGroupedByShop', productsController.fetchProductsByShopGrouped);
 route.post('/creatpaymenturl', vnpayReturnController.createPaymentUrl);

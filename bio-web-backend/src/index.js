@@ -34,7 +34,7 @@ io.on('connection', (socket) => {
   // console.log('Socket connected:', socket.id);
 
   socket.on('sendmessage', (data) => {
-    console.log(data);
+    // console.log(data);
 
     // ✅ Gửi cho các client khác (KH hoặc shop khác)
     socket.broadcast.emit('backmessage', data);
