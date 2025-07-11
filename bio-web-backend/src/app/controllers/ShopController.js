@@ -18,6 +18,14 @@ class ShopController {
       return res.status(500).json({ message: 'Khong the lay thong tn shop' });
     }
   }
+  async fetchAllShop(req, res) {
+    try {
+      const shopInfo = await Shops.find({});
+      return res.status(200).json(shopInfo);
+    } catch (error) {
+      return res.status(500).json({ message: 'Khong the lay thong tn shop' });
+    }
+  }
   async updateShop(req, res) {
     try {
       const { id } = req.params;

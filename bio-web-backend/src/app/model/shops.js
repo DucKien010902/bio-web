@@ -22,6 +22,10 @@ const shopSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  isActive: {
+    type: Boolean,
+    default: false,
+  },
   lastActive: {
     type: Date,
   },

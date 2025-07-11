@@ -9,18 +9,19 @@ const server = http.createServer(app);
 // ✅ Cấu hình chính xác CORS (áp dụng cho cả Socket.IO lẫn Express)
 const allowedOrigins = ['https://genapp.vn', 'http://localhost:3000'];
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       if (!origin || allowedOrigins.includes(origin)) {
+//         callback(null, true);
+//       } else {
+//         callback(new Error('Not allowed by CORS'));
+//       }
+//     },
+//     credentials: true,
+//   })
+// );
+app.use(cors());
 const { Server } = require('socket.io');
 const io = new Server(server, {
   cors: {
@@ -31,10 +32,10 @@ const io = new Server(server, {
 });
 
 io.on('connection', (socket) => {
-  // console.log('Socket connected:', socket.id);
+  console.log('Socket connected:', socket.id);
 
   socket.on('sendmessage', (data) => {
-    // console.log(data);
+    console.log(data);
 
     // ✅ Gửi cho các client khác (KH hoặc shop khác)
     socket.broadcast.emit('backmessage', data);
