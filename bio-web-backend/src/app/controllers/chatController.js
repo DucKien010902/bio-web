@@ -8,6 +8,7 @@ class ChatDB {
   async sendMessage(req, res) {
     try {
       const { sender, receiver, content, fromShop } = req.body;
+      console.log(sender, receiver, content, fromShop);
       if (!sender || !receiver || !content || typeof fromShop !== 'boolean') {
         return res.status(400).json({ message: 'Thiếu thông tin' });
       }

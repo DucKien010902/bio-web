@@ -9,6 +9,7 @@ const Shop = require('./shopRoute');
 const Order = require('./orderRoute');
 const Voucher = require('./voucherRoute');
 const Chat = require('./chatRoute');
+const Category = require('./categoryRoute');
 function route(app) {
   app.use('/clinic', Clinic);
   app.use('/testservice', TestType);
@@ -19,5 +20,6 @@ function route(app) {
   app.use('/order', Order);
   app.use('/voucher', Voucher);
   app.use('/chat', Chat);
+  app.use('/category', Category);
 }
 module.exports = route;
