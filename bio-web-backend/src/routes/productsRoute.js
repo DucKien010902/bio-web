@@ -3,6 +3,7 @@ const route = express.Router();
 const productsController = require('../app/controllers/productController.js');
 const vnpayReturnController = require('../app/controllers/vnpayReturnController.js');
 route.get('/getallproducts', productsController.getallProducts);
+route.get('/searchproducts', productsController.searchProducts);
 route.get('/getproductbyid', productsController.getProductById);
 route.get('/getproductbycategory', productsController.getProductsByCategory);
 route.get('/getcarts', productsController.getCarts);

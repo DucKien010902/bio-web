@@ -3,6 +3,16 @@ const carts = require('../model/cartsDB');
 const shops = require('../model/shops');
 const vnpayConfig = require('../../config/VNPayConfig');
 const querystring = require('qs');
+const normalizeVN = (str) => {
+  return str
+    .normalize('NFD') // Tách chữ & dấu (VD: "ế" -> "ế")
+    .replace(/[\u0300-\u036f]/g, '') // Xoá dấu tiếng Việt
+    .replace(/đ/g, 'd') // đ → d
+    .replace(/Đ/g, 'D') // Đ → D
+    .replace(/\s+/g, '') // Xoá tất cả khoảng trắng
+    .toLowerCase(); // Về chữ thường
+};
+
 class producController {
   async getallProducts(req, res) {
     try {
@@ -12,6 +22,33 @@ class producController {
       return res.status(500).json({ message: 'Loi server' });
     }
   }
+  async searchProducts(req, res) {
+    try {
+      const { key } = req.query;
+      if (!key) return res.status(400).json({ message: 'Missing key' });
+
+      const normalizedKey = normalizeVN(key);
+
+      const allProducts = await products.find({});
+      const filtered = allProducts.filter((product) => {
+        const fieldsToSearch = [
+          product.pdName,
+          product.pdCategory,
+          product.pdClassify,
+        ];
+
+        return fieldsToSearch.some(
+          (field) => field && normalizeVN(field).includes(normalizedKey)
+        );
+      });
+
+      return res.status(200).json(filtered);
+    } catch (error) {
+      console.log('Search error:', error);
+      return res.status(500).json({ message: 'Lỗi server' });
+    }
+  }
+
   async getProductById(req, res) {
     const { Id } = req.query;
     try {
