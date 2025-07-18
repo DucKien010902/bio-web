@@ -6,4 +6,5 @@ route.post('/addcategory', Category.addCategory);
 route.post('/deletecategory', Category.deleteCategory);
 route.post('/addclassify', Category.addClassify);
 route.post('/deleteclassify', Category.removeClassify);
+route.post('/createOrUpdateCategory', Category.createOrUpdateCategory);
 module.exports = route;

@@ -1,0 +1,10 @@
+const express = require('express');
+const route = express.Router();
+const Approve = require('../app/controllers/approveController');
+route.post('/proposecategory', Approve.proposeCategory);
+route.post('/proposeClassify', Approve.proposeClassify);
+route.post('/approvepropose', Approve.approvePropose);
+route.post('/deletepropose', Approve.deletePropose);
+route.post('/proposeClassify', Approve.proposeClassify);
+route.get('/getallpropose', Approve.getAllProposed);
+module.exports = route;

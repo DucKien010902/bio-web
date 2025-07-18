@@ -117,6 +117,44 @@ class CategoryController {
       return res.status(500).json({ message: 'Lỗi server' });
     }
   }
+  // Tạo hoặc cập nhật danh mục (nếu đã tồn tại thì thêm phân loại mới)
+  async createOrUpdateCategory(req, res) {
+    try {
+      const { name, classifies = [] } = req.body;
+      if (!name) {
+        return res.status(400).json({ message: 'Thiếu tên danh mục' });
+      }
+
+      const category = await Category.findOne({ name });
+
+      if (category) {
+        // Nếu danh mục đã tồn tại, thêm phân loại mới không trùng
+        const newClassifies = classifies.filter(
+          (cls) => !category.classifies.includes(cls)
+        );
+
+        if (newClassifies.length > 0) {
+          await Category.updateOne(
+            { name },
+            { $addToSet: { classifies: { $each: newClassifies } } }
+          );
+        }
+
+        return res
+          .status(200)
+          .json({ message: 'Đã cập nhật danh mục với phân loại mới' });
+      } else {
+        // Danh mục chưa có, tạo mới
+        const newCategory = new Category({ name, classifies });
+        await newCategory.save();
+        return res
+          .status(201)
+          .json({ message: 'Đã tạo danh mục mới thành công' });
+      }
+    } catch (error) {
+      return res.status(500).json({ message: 'Lỗi server khi tạo/cập nhật' });
+    }
+  }
 }
 
 module.exports = new CategoryController();
