@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 const UserDB = require('../model/usersDB');
 const usersDB = require('../model/usersDB');
-
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+const SECRET_KEY = process.env.SECRET_KEY;
 class UsersController {
   async createAccount(req, res) {
     try {
@@ -41,7 +43,12 @@ class UsersController {
   async checkAccount(req, res) {
     try {
       const { phoneNumber, password } = req.body;
-
+      const userAgent = req.headers['user-agent'];
+      if (userAgent && userAgent.includes('PostmanRuntime')) {
+        return res
+          .status(403)
+          .json({ message: 'Không được phép đăng nhập từ Postman!' });
+      }
       if (!phoneNumber || !password) {
         return res
           .status(400)
@@ -58,10 +65,13 @@ class UsersController {
       if (password !== user.password) {
         return res.status(401).json({ message: 'Mật khẩu không chính xác.' });
       }
-
+      const token = jwt.sign({ phoneNumber: user.phoneNumber }, SECRET_KEY, {
+        expiresIn: '1h',
+      });
       res.status(200).json({
         message: 'Đăng nhập thành công!',
         user: user,
+        token: token,
       });
     } catch (error) {
       console.error('Lỗi kiểm tra tài khoản:', error);
@@ -70,6 +80,7 @@ class UsersController {
   }
   async getAccount(req, res) {
     try {
+      console.log('here');
       const { phoneNumber } = req.query;
       const existingUser = await usersDB.findOne({ phoneNumber });
       return res.status(200).json(existingUser);

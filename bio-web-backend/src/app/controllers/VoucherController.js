@@ -114,12 +114,13 @@ class VoucherController {
     }
   }
   async deleteVoucherByID(req, res) {
+    console.log('here');
     try {
-      const { voucherID, phoneNumber } = req.body;
-      console.log('--' + phoneNumber);
-      const deleted = await UserVoucher.findOneAndDelete({
+      console.log('huu');
+      const { voucherID } = req.body;
+      console.log('--' + voucherID);
+      const deleted = await Voucher.findOneAndDelete({
         voucherID,
-        phoneNumber,
       });
 
       if (!deleted) {
@@ -128,14 +129,14 @@ class VoucherController {
 
       return res.json({ message: 'Đã xoá voucher' });
     } catch (err) {
-      return res.status(500).json({ message: 'Xoá thất bại' });
+      return res.status(500).json({ message: 'Xoá bại thất' });
     }
   }
   async deleteVoucherByUser(req, res) {
     try {
       const { voucherID, phoneNumber } = req.body;
       console.log(voucherID);
-      const deleted = await Voucher.findOneAndDelete({
+      const deleted = await UserVoucher.findOneAndDelete({
         voucherID,
         phoneNumber,
       });

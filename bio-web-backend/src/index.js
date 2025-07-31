@@ -21,7 +21,7 @@ const io = new Server(server, {
 });
 
 io.on('connection', (socket) => {
-  console.log('Socket connected:', socket.id);
+  // console.log('Socket connected:', socket.id);
   socket.on('sendmessage', (data) => {
     socket.broadcast.emit('backmessage', data);
   });
@@ -30,18 +30,12 @@ io.on('connection', (socket) => {
 // Kết nối DB
 const db = require('./config/db/index');
 db.connect();
-
-// 👉 GỌI CRON SAU KHI DB CONNECT (hoặc ngay dưới cũng được)
 const startVoucherCleaner = require('./app/controllers/voucherClearner');
-startVoucherCleaner(); // ← thêm dòng này
-
-// Middleware
+startVoucherCleaner();
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
-// Routes
 const route = require('./routes/index');
 route(app);
 

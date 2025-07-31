@@ -11,6 +11,7 @@ const Voucher = require('./voucherRoute');
 const Chat = require('./chatRoute');
 const Category = require('./categoryRoute');
 const Approve = require('./approveRoute');
+const authMiddleware = require('../middlewares/authMiddleware');
 function route(app) {
   app.use('/clinic', Clinic);
   app.use('/testservice', TestType);

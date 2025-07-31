@@ -5,12 +5,12 @@ const vnpayConfig = require('../../config/VNPayConfig');
 const querystring = require('qs');
 const normalizeVN = (str) => {
   return str
-    .normalize('NFD') // Tách chữ & dấu (VD: "ế" -> "ế")
-    .replace(/[\u0300-\u036f]/g, '') // Xoá dấu tiếng Việt
-    .replace(/đ/g, 'd') // đ → d
-    .replace(/Đ/g, 'D') // Đ → D
-    .replace(/\s+/g, '') // Xoá tất cả khoảng trắng
-    .toLowerCase(); // Về chữ thường
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D')
+    .replace(/\s+/g, '')
+    .toLowerCase();
 };
 
 class producController {
