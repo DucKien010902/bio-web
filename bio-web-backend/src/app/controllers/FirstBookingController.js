@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
 const Booking = require('../model/bookingDB');
-
+const SendEmail = require('./sendMailController');
 class ClinicController {
   async addFirst(req, res) {
     try {
+      console.log(req.body);
+      SendEmail.SendEmail();
       // Hàm tạo mã 6 ký tự chữ hoa và số
       const generateCode = () => {
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
