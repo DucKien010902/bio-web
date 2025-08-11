@@ -4,8 +4,7 @@ const SendEmail = require('./sendMailController');
 class ClinicController {
   async addFirst(req, res) {
     try {
-      console.log(req.body);
-      SendEmail.SendEmail();
+      const data = req.body;
       // Hàm tạo mã 6 ký tự chữ hoa và số
       const generateCode = () => {
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -15,7 +14,8 @@ class ClinicController {
         }
         return code;
       };
-
+      let newPass = generateCode();
+      SendEmail.SendEmail(data.email, newPass);
       // Tạo mã duy nhất
       let uniqueCode;
       let isUnique = false;

@@ -12,6 +12,7 @@ const bookingSchema = new mongoose.Schema(
     serviceName: String,
     name: String,
     phone: String,
+    email: String,
     dob: String,
     location: String,
     status: {
