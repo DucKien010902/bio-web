@@ -78,6 +78,36 @@ class UsersController {
       res.status(500).json({ message: 'Đã xảy ra lỗi máy chủ.' });
     }
   }
+
+  async updatePass(req, res) {
+    try {
+      const { phoneNumber, newPassword } = req.body;
+
+      if (!phoneNumber || !newPassword) {
+        return res
+          .status(400)
+          .json({
+            message: 'Vui lòng nhập đầy đủ số điện thoại và mật khẩu mới.',
+          });
+      }
+
+      const existingUser = await usersDB.findOne({ phoneNumber });
+      if (!existingUser) {
+        return res.status(404).json({ message: 'Tài khoản không tồn tại.' });
+      }
+
+      // Nếu muốn mã hóa mật khẩu, bạn có thể dùng bcrypt ở đây
+      // const hashedPassword = await bcrypt.hash(newPassword, 10);
+      existingUser.password = newPassword;
+      await existingUser.save();
+
+      return res.status(200).json({ message: 'Cập nhật mật khẩu thành công!' });
+    } catch (error) {
+      console.error('Lỗi cập nhật mật khẩu:', error);
+      return res.status(500).json({ message: 'Đã xảy ra lỗi máy chủ.' });
+    }
+  }
+
   async getAccount(req, res) {
     try {
       console.log('here');
