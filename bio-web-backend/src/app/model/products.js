@@ -21,12 +21,9 @@ const products = new Schema({
   pdDetailData: [{}],
   pdMoreDescriptions: String,
 });
-
-// 👉 Tự động xoá khỏi cart khi xoá sản phẩm tổng
 products.pre('findOneAndDelete', async function (next) {
   const doc = await this.model.findOne(this.getQuery());
   if (doc && doc.Id) {
-    // Xóa sản phẩm có Id trùng trong mọi cart
     await Cart.updateMany({}, { $pull: { cart: { Id: doc.Id } } });
   }
   next();

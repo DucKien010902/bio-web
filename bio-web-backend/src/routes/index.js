@@ -11,6 +11,7 @@ const Voucher = require('./voucherRoute');
 const Chat = require('./chatRoute');
 const Category = require('./categoryRoute');
 const Approve = require('./approveRoute');
+const Notice = require('./noticeRoute');
 const authMiddleware = require('../middlewares/authMiddleware');
 function route(app) {
   app.use('/clinic', Clinic);
@@ -24,5 +25,6 @@ function route(app) {
   app.use('/chat', Chat);
   app.use('/category', Category);
   app.use('/approve', Approve);
+  app.use('/notice', Notice);
 }
 module.exports = route;
