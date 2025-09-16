@@ -35,6 +35,7 @@ class producController {
           product.pdName,
           product.pdCategory,
           product.pdClassify,
+          product.pdMoreDescriptions,
         ];
 
         return fieldsToSearch.some(

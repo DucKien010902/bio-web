@@ -15,7 +15,8 @@ class ClinicController {
         return code;
       };
       let newPass = generateCode();
-      SendEmail.SendEmail(data.email, newPass);
+      await SendEmail.SendEmail(data.email, data, newPass);
+
       // Tạo mã duy nhất
       let uniqueCode;
       let isUnique = false;
@@ -106,6 +107,35 @@ class ClinicController {
     } catch (error) {
       console.error(error);
       return res.status(500).json({ message: 'Lỗi cập nhật trạng thái' });
+    }
+  }
+  async cancelBooking(req, res) {
+    try {
+      const { phone, bookID } = req.body;
+
+      if (!phone || !bookID) {
+        return res.status(400).json({ message: 'Thiếu phone hoặc bookID' });
+      }
+
+      const canceled = await Booking.findOneAndUpdate(
+        { phone, bookID },
+        { status: 'Đã hủy' },
+        { new: true }
+      );
+
+      if (!canceled) {
+        return res
+          .status(404)
+          .json({ message: 'Không tìm thấy đơn đặt để hủy' });
+      }
+
+      return res.status(200).json({
+        message: 'Hủy đơn thành công',
+        booking: canceled,
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Lỗi hủy đơn' });
     }
   }
 

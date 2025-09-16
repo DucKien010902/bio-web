@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-// Schema cho từng gói xét nghiệm
 const TestPackageSchema = new mongoose.Schema({
   code: { type: String, required: true, unique: true },
   name: { type: String, required: true },
