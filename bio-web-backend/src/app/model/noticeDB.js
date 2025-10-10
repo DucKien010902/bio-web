@@ -9,6 +9,8 @@ const NoticeSchema = new mongoose.Schema(
     Title: { type: String, required: true }, // tiêu đề
     Content: { type: String }, // nội dung chi tiết
     Voice: { type: String }, // đường dẫn file audio (nếu có)
+    PhoneNumber: { type: String },
+    Classify: { type: String },
     isViewed: { type: Boolean },
   },
   {

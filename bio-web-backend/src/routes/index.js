@@ -12,6 +12,7 @@ const Chat = require('./chatRoute');
 const Category = require('./categoryRoute');
 const Approve = require('./approveRoute');
 const Notice = require('./noticeRoute');
+const Lark = require('./larkRoute');
 const authMiddleware = require('../middlewares/authMiddleware');
 function route(app) {
   app.use('/clinic', Clinic);
@@ -26,5 +27,6 @@ function route(app) {
   app.use('/category', Category);
   app.use('/approve', Approve);
   app.use('/notice', Notice);
+  app.use('/lark', Lark);
 }
 module.exports = route;
